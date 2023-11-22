@@ -1,0 +1,85 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Meta tags for character set, viewport, and compatibility -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Title for the page -->
+    <title>Weather Forecast App</title>
+    <!-- Link to Bulma CSS framework -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.css" />
+</head>
+<body>
+    <section class="section">
+        <div class="container">
+            <!-- Title for the weather forecast section -->
+            <h1 class="title">Weather Forecast</h1>
+            <!-- Search input field -->
+            <div class="field">
+                <label class="label">Search City:</label>
+                <div class="control">
+                    <input class="input" type="text" id="search" placeholder="Enter city name">
+                </div>
+            </div>
+            <!-- Container for weather information -->
+            <div class="columns is-multiline" id="weather-container">
+                {% for weather in weather_data %}
+                    <!-- Column for each city's weather information -->
+                    <div class="column is-one-third">
+                        <div class="box">
+                            <article class="media">
+                                <div class="media-left">
+                                    <!-- Weather icon for the city -->
+                                    <figure class="image is-64x64">
+                                        <img src="http://openweathermap.org/img/w/{{ weather.icon }}.png" alt="Weather Icon">
+                                    </figure>
+                                </div>
+                                <div class="media-content">
+                                    <div class="content">
+                                        <!-- City name, temperature, and description -->
+                                        <p>
+                                            <strong>{{ weather.city }}</strong><br>
+                                            Temperature: {{ weather.temperature }}°C<br>
+                                            Description: {{ weather.description }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- JavaScript script for live search functionality -->
+    <script>
+        document.getElementById('search').addEventListener('input', function () {
+            // Retrieve the search input value
+            var searchInput = this.value.toLowerCase();
+            // Get the container of city columns
+            var citiesContainer = document.getElementById('weather-container');
+            // Get all city columns
+            var cities = citiesContainer.getElementsByClassName('column');
+
+            // Iterate through each city column
+            for (var i = 0; i < cities.length; i++) {
+                var city = cities[i];
+                // Get the city name from the column
+                var cityName = city.getElementsByTagName('strong')[0].innerText.toLowerCase();
+
+                // Check if the city name includes the search input
+                if (cityName.includes(searchInput)) {
+                    // Display the city column if the name matches
+                    city.style.display = 'block';
+                } else {
+                    // Hide the city column if the name does not match
+                    city.style.display = 'none';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
